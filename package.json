@@ -1,0 +1,25 @@
+{
+  "name": "blockchain-sandbox",
+  "version": "1.0.0",
+  "description": "Making my own blockchain",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "babel-node src/index.js",
+    "lint": "eslint src/*",
+    "test": "npm run lint"
+  },
+  "author": "Benjamin Goh",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6",
+    "babel-plugin-module-resolver": "^2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6"
+  },
+  "devDependencies": {
+    "eslint": "^3",
+    "eslint-plugin-import": "^2",
+    "eslint-import-resolver-babel-module": "^2",
+    "babel-eslint": "^7"
+  }
+}
