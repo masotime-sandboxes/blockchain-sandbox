@@ -1,5 +1,5 @@
 import { ALGORITHMS, FORMATS, createHasher } from 'hash';
-import { validateTxn } from 'lib';
+import { validateTxn, updateState } from 'lib';
 
 const hasher = createHasher(ALGORITHMS.SHA256, FORMATS.HEX);
 
@@ -49,9 +49,29 @@ function makeBlock(txns, chain) {
 	const txnCount = txns.length;
 
 	// create the block
-	const blockContents = { blockNumber, parentHash, txnCount, tnxs };
+	const blockContents = { blockNumber, parentHash, txnCount, txns };
 	const block = { hash: hasher.hash(blockContents), contents: blockContents };
 
 	return block;
 }
 
+// ????
+const BLOCK_SIZE_LIMIT = 5;
+
+// run through all transactions and ignore invalid transactions
+// each block should hold no more than BLOCK_SIZE_LIMIT txns
+function mergeChain({ chain, state, txns }) {
+	let runningState = { ...state }; // clone state
+	const validTxns = [];
+	for (const txn of txns) {
+		if (validateTxn(txn, runningState)) {
+			validTxns.push(txn);
+			runningState = updateState(txn, runningState);
+		}
+	}
+
+	chain.push(makeBlock(validTxns, chain));
+}
+
+// create the first blocks from the txnBuffer
+mergeChain({ chain, initialState})
